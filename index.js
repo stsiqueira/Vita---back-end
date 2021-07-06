@@ -6,7 +6,7 @@ import mongodb from 'mongodb';
 
 
 const app = express();
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT || 3000;
 
 
 //mongoose connection
@@ -45,6 +45,14 @@ const routes = (app) => {
             next();
         }, getAllNutrients)
 
+        app.route('/getAllQuiz')
+        .get((req, res, next) => {
+            //middleware
+            console.log("Req from:" + req.originalUrl);
+            console.log("Req method:" + req.method);
+            next();
+        }, getAllQuiz)
+
     // app.route('/Fruits/:name')
     // //get a specific contact
     // .get(getfruitbyName)  
@@ -71,6 +79,20 @@ const getAllNutrients = (req, res) => {
         if (err) throw err;
         var dbo = db.db("Vita");
         dbo.collection("Nutrients").find({}).toArray(function (err, result) {
+            if (err) throw err;          
+            db.close();
+            res.json(result);
+        });
+    });
+
+}
+
+const getAllQuiz = (req, res) => {
+
+    MongoClient.connect(connectionString, function (err, db) {
+        if (err) throw err;
+        var dbo = db.db("Vita");
+        dbo.collection("Quiz").find({}).toArray(function (err, result) {
             if (err) throw err;          
             db.close();
             res.json(result);
