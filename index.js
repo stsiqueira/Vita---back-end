@@ -57,6 +57,14 @@ const routes = (app) => {
             next();
         }, getAllQuiz)
 
+        app.route('/getAllTeam')
+        .get((req, res, next) => {
+            //middleware
+            console.log("Req from:" + req.originalUrl);
+            console.log("Req method:" + req.method);
+            next();
+        }, getAllTeam)
+
     // app.route('/Fruits/:name')
     // //get a specific contact
     // .get(getfruitbyName)  
@@ -97,6 +105,20 @@ const getAllQuiz = (req, res) => {
         if (err) throw err;
         var dbo = db.db("Vita");
         dbo.collection("Quiz").find({}).toArray(function (err, result) {
+            if (err) throw err;          
+            db.close();
+            res.json(result);
+        });
+    });
+
+}
+
+const getAllTeam = (req, res) => {
+
+    MongoClient.connect(connectionString, function (err, db) {
+        if (err) throw err;
+        var dbo = db.db("Vita");
+        dbo.collection("Team").find({}).toArray(function (err, result) {
             if (err) throw err;          
             db.close();
             res.json(result);
